@@ -66,3 +66,59 @@ class Cliente:
     
     def __str__(self):
         return f"Cliente: {self.nome} | Pontos: {self.pontos_fidelidade} | Email: {self.email}"
+
+class Pedido:
+    
+    stat = ["pendente", "pocessamento", "entregue"]
+
+    def __init__(self, cliente : Cliente, 
+                 produto : Produto, 
+                 quantidade : int,
+                 status : str):
+        if isinstance(cliente, Cliente):
+            self.cliente = cliente
+        
+        if isinstance(produto, Produto):
+            self.produto = produto
+
+        if isinstance(quantidade, int):
+            self.quantidade = quantidade
+
+        if isinstance(status, str) and status.lower() in self.stat:
+            self.status = status
+
+    def calcular_peso_total (self):
+        return self.produto.peso_kg * self.quantidade
+
+    def calcular_total(self):
+        return self.produto.preco * self.calcular_peso_total()
+
+    def atualizar_status (self, novo):
+        if novo in self.stat:
+            self.status = novo
+    
+    def cancelar_pedido (self):
+        if self.status == "pendente":
+            self.status = "cancelado"
+        else:
+            return f"Pedido já está sendo preocessado."
+        
+    def __add__(self, other):
+        if (
+            isinstance(other, Pedido)
+            and self.cliente == other.cliente
+            and self.produto == other.produto
+            ):
+            nova = self.quantidade + other.quantidade
+            return Pedido(
+                self.cliente,
+                self.produto,
+                nova,
+                self.status
+            )
+
+    def __lt__ (self, other):
+        return self.calcular_peso_total() == other.calcular_peso_total()
+
+    def __call__(self):
+        return f"Pedido: {self.quantidade}x {self.produto}"
