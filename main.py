@@ -35,3 +35,34 @@ class Produto:
     def __str__(self):
         return f"Produto: {self.nome} | Preço: {self.preco} | Estoque: {self.estoque} | Peso (kg): {self.peso_kg}" 
     
+
+class Cliente:
+    def __init__(self, nome : str, email : str):
+        if isinstance(nome, str):
+            self.nome = nome
+        if isinstance(email, str):
+            self.email = email
+        
+        self.pontos_fidelidade = 0
+
+    def adicionar_pontos (self, pontos):
+        if isinstance(pontos, int) and pontos > 0:
+            self.pontos_fidelidade += pontos
+    
+    def resgatar_pontos (self, pontos):
+        if isinstance(pontos, int) and pontos > 0:
+            self.pontos_fidelidade -= pontos
+    
+    def verificar_vip (self):
+        if self.pontos_fidelidade >= 1000:
+            return True
+        
+    def __eq__(self, value):
+        return self.email == value.email
+    
+    def __iadd__ (self, pontos):
+        self.pontos_fidelidade += pontos
+        return self
+    
+    def __str__(self):
+        return f"Cliente: {self.nome} | Pontos: {self.pontos_fidelidade} | Email: {self.email}"
